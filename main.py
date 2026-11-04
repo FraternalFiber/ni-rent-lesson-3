@@ -115,7 +115,7 @@ if __name__ == '__main__':
     manager = Manager(parameters)
 
 # --- MIESZKANIA, POKOJE I RACHUNKI ---
-print("=== MIESZKANIA EVI ===\n")
+print("=== MIESZKANIA ===\n")
 
 for apartment in manager.apartments.values():
     print(
