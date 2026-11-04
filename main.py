@@ -114,17 +114,58 @@ if __name__ == '__main__':
     parameters = Parameters()
     manager = Manager(parameters)
 
-    for apartment in manager.apartments.values():
-        print(apartment.key, apartment.name, apartment.location, apartment.area_m2)
-        for room in apartment.rooms.values():
-            print('  ', room.name, room.area_m2)
-        
-        for bill in manager.bills:
-            if bill.apartment == apartment.key:
-                print('  ', bill.amount_pln, bill.date_due, bill.settlement_year, bill.settlement_month, bill.type)
+# --- MIESZKANIA, POKOJE I RACHUNKI ---
+print("=== MIESZKANIA EVI ===\n")
 
-    for tenant in manager.tenants.values():
-        print(tenant.name, tenant.apartment, tenant.room, tenant.rent_pln, tenant.deposit_pln, tenant.date_agreement_from, tenant.date_agreement_to)
-        for transfer in manager.transfers:
-            if transfer.tenant == tenant.name:
-                print('  ', transfer.amount_pln, transfer.date, transfer.settlement_year, transfer.settlement_month)
+for apartment in manager.apartments.values():
+    print(
+        f"Mieszkanie: {apartment.name} (Klucz: {apartment.key}) | "
+        f"Lokalizacja: {apartment.location} | Powierzchnia: {apartment.area_m2} m²"
+    )
+
+    # Pokoje
+    if apartment.rooms:
+        print("  Pokoje:")
+        for room in apartment.rooms.values():
+            print(f"    • {room.name} — {room.area_m2} m²")
+
+    # Rachunki przypisane do mieszkania
+    apt_bills = [
+        b for b in manager.bills if b.apartment == apartment.key
+    ]
+    if apt_bills:
+        print("  Rachunki:")
+        for bill in apt_bills:
+            print(
+                f"    • [{bill.type}] {bill.amount_pln} PLN | "
+                f"Okres: {bill.settlement_month}/{bill.settlement_year} | "
+                f"Termin: {bill.date_due}"
+            )
+
+    print("-" * 60)
+
+# --- NAJEMCY I PRZELEWY ---
+print("\n=== NAJEMCY I PRZELEWY ===\n")
+
+for tenant in manager.tenants.values():
+    print(
+        f"Najemca: {tenant.name} | Mieszkanie: {tenant.apartment} (Pokój: {tenant.room})"
+    )
+    print(
+        f"  Czynsz: {tenant.rent_pln} PLN | Kaucja: {tenant.deposit_pln} PLN | "
+        f"Umowa: {tenant.date_agreement_from} do {tenant.date_agreement_to}"
+    )
+
+    # Przelewy przypisane do najemcy
+    tenant_transfers = [
+        t for t in manager.transfers if t.tenant == tenant.name
+    ]
+    if tenant_transfers:
+        print("  Wpłaty / Przelewy:")
+        for transfer in tenant_transfers:
+            print(
+                f"    • {transfer.amount_pln} PLN | Data: {transfer.date} | "
+                f"Okres: {transfer.settlement_month}/{transfer.settlement_year}"
+            )
+
+    print("-" * 60)
