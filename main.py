@@ -23,6 +23,7 @@ class ApartmentSettlement(BaseModel):
     bills_pln: float
     rent_pln: float
     left_to_pay_pln: float
+    
 
 class Apartment(BaseModel):
     key: str
